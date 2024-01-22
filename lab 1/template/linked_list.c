@@ -39,15 +39,16 @@ void insertLL(int value){
 
         // insert value within linked list
         currNode = head->next;
-        prevNode = head;
+        Node *prevNode = head;
 
-        while (currNode->next){
-            if (currNode->val >= value){
+        while (currNode){
+            if (value <= currNode->val){
                 Node *new = createNode(value);
                 new->next = currNode;
                 prevNode->next = new;
                 return;
             }
+            prevNode = currNode;
             currNode = currNode->next;
         }
 }

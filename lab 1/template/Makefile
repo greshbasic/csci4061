@@ -8,7 +8,7 @@ main.o: main.c linked_list.h
 
 # 3. complete gcc command
 main:
-	gcc -o main main.c
+	gcc -o main main.o linked_list.o
 
 run: main
 	./main
