@@ -12,13 +12,44 @@ Node *createNode(int value){
 
 void insertLL(int value){
     // Cases to handle:
+
         // Empty linked list
         if(!head){
             head = createNode(value);
+            return;
         }
+
         // value < head->val
+        if(value < head->val){
+            Node *new = createNode(value);
+            new->next = head;
+            head = new;
+            return;
+        }
+
         // value > last node in linked list
+        Node *currNode = head;
+        while (currNode->next){
+            currNode = currNode->next;
+        }
+        if (currNode->val < value){
+            currNode->next = createNode(value);
+            return;
+        }
+
         // insert value within linked list
+        currNode = head->next;
+        prevNode = head;
+
+        while (currNode->next){
+            if (currNode->val >= value){
+                Node *new = createNode(value);
+                new->next = currNode;
+                prevNode->next = new;
+                return;
+            }
+            currNode = currNode->next;
+        }
 }
 
 void freeLL(){
