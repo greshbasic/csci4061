@@ -3,9 +3,6 @@ linked_list.o:
 	gcc -c linked_list.c
 
 # 2. insert dependencies
-main.o: main.c linked_list.h
-	gcc -c main.c
-
 # 3. complete gcc command
 main:
 	gcc -o main main.o linked_list.o
