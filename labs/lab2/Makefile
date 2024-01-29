@@ -19,5 +19,4 @@ main.o: main.c main.h
 
 clean :
 	rm *.o
-	rm *.h.gch
 
