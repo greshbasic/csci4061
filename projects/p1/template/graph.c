@@ -5,7 +5,7 @@ struct AdjListNode* newAdjListNode(int dest){
     newNode->dest = dest; 
     newNode->next = NULL; 
     return newNode; 
-} 
+}  
 
 // TODO: This function is to read files. And based on the file content, build a DepGraph (please refer to figure 1 in project1.pdf).
 // Please take a close look at the file structure on page 2, section 4, "Sample Input."
@@ -15,7 +15,10 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
 	char *line = NULL;
     int V;
     int numOfNodes = 0;
-    struct AdjListNode* *AdjList;
+    struct AdjList* array;
+    char *token;
+    int source;
+    int dest;
 
 
     // First, let's read the number of nodes and all commands from the input file!
@@ -35,22 +38,32 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
 
     // Now, let's move to Graph Creation!
     // Dynamically allocate the memory space to the DepGraph.
-    struct DepGraph* newDepGraph = (struct DepGraph*) malloc(sizeof(struct DepGraph));
+    struct DepGraph* graph = (struct DepGraph*) malloc(sizeof(struct DepGraph));
 
     // Then, initialize the value of V (Number of nodes), and Dynamically allocate the memory space to DepGraph's AdjList array
     V = numOfNodes;
-    AdjList = (struct AdjListNode**) malloc(V * sizeof(struct AdjListNode));
+    graph->array = (struct AdjList*) malloc(V * sizeof(struct AdjListNode*));
 
 
     // Initialize each element in the DepGraph's AdjList array
     for(int i = 0; i < V; i++){
-        AdjList[i] = NULL;
+        graph->array[i] = NULL;
     }
+
 
     // Now, let's build edges to this DepGraph
     // Inside each loop iteration, use getline(), strtok(), and sscanf() to tokenize sources and destinations from the file.
     // Sources and destinations represent edges between commands. (please refer to figure 1 in project1.pdf)
     // Add edge to the DepGraph using addEdge(), source, and destination
+ 
+
+    for(int i = 0; i < V-1; i++){
+        read = getline(&line, &len, input);
+        source = atoi(strtok(line, " "));
+        dest = atoi(strtok(NULL, " "));
+        addEdge(*graph, source, dest);
+        printf("%d. Added edge: (%d, %d)\n", i+1, source, dest);
+    }
    
     return graph; 
 }
@@ -61,10 +74,21 @@ void addEdge(struct DepGraph* graph, int src, int dest){
     // If the head of the AdjList array element at the index of src is null, 
     // we create a new node using newAdjListNode()
     // and make the head of the AdjList array element at the index of src points to it.
+    if (graph->array[src] == NULL){
+        graph->array[src] = newAdjListNode(dest);
+        return;
+    }
 
     // If the head of the AdjList array element at the index of src is NOT null,
     // then we will traverse to the next AdjListNode until we find a node is pointing to a null.
     // Create a new node using newAdjListNode() and make the current node point to it.
+    struct AdjListNode* currentNode = graph[src];
+    while (currentNode->next) {
+        currentNode = currentNode->next;
+    }
+
+    currentNode->next = newAdjListNode(dest);
+    return;
 }
 
 // TODO: This function writes the DephGraph to the output file and executes the commands.
