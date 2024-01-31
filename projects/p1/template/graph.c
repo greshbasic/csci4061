@@ -21,7 +21,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     // First, let's read the number of nodes and all commands from the input file!
     // 1. Get the number of nodes using getline() and sscanf()
     read = getline(&line, &len, input);
-    sscanf(line, "&d", &numOfNodes);
+    sscanf(line, "%d", &numOfNodes);
 
     // 2. Skip the blank line.
     read = getline(&line, &len, input);
@@ -29,7 +29,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     // 3. Read all commands from the file using a loop until reach the source-destination section (reaches a newline character '\n')
     // We won't do anything to cmds[][550] in this function OTHER THAN reading all commands from it.
     read = getline(&line, &len, input);
-    while(line != '\n'){
+    while(line[0] != '\n'){
         read = getline(&line, &len, input);
     }
 
