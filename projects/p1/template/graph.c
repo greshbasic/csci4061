@@ -43,6 +43,9 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
 
 
     // Initialize each element in the DepGraph's AdjList array
+    for(int i = 0; i < V; i++){
+        AdjList[i] = NULL;
+    }
 
     // Now, let's build edges to this DepGraph
     // Inside each loop iteration, use getline(), strtok(), and sscanf() to tokenize sources and destinations from the file.
