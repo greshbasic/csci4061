@@ -39,7 +39,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
 
     // Then, initialize the value of V (Number of nodes), and Dynamically allocate the memory space to DepGraph's AdjList array
     V = numOfNodes;
-    AdjList = (struct AdjListNode**) malloc(V * sizeof(struct AdjListNode));
+    AdjList = (struct AdjListNode*) malloc(V * sizeof(struct AdjListNode));
 
 
     // Initialize each element in the DepGraph's AdjList array
