@@ -34,11 +34,18 @@ int main(int argc, char *argv[]) {
             perror("fork() failed"); // An error occurred
             return 1;
         } else if (pid > 0) { // Parent process,
-
             // TODO: wait for this child process using its process id to terminate using waitpid()
             // also check for errors for waitpid
+            int status;
+            pid_t child_pid = waitpid(pid, &status, 0);
+            if (child_pid < 0) {
+                perror("Wait failed");
+                return 1; 
+            }
         }
+
     }
+    
     printf("FINISH pid: %d parent_pid: %d\n", getpid(), getppid());
     return 0;
 }
