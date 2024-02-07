@@ -1,0 +1,25 @@
+*test machine: CSELAB_machine_name
+* date: mm/dd/yy
+* name: Gresham Basic, [full_name2]
+* x500: basic009, [id_for_second_name]
+*
+
+• test machine, date, team member names, and x500 [X]
+
+
+• Your and your partners' contributions
+
+
+• How to compile the program
+    - run "make" to compile everything
+    - can also run "make test1, make test2, ... make testN" to compile and run indivudual inputN files.
+
+• The purpose of your program
+    The purpose of this program is to take a given dependancy graph and execute the commands in its nodes.
+
+• What exactly your program does
+    Given a dependancy graph (passed as a .txt file argument) and a mode selection (passed as an argument flag "-p" or lack thereof), the program will either:
+        - execute the commands in each node using fork, exec, or wait calls, sequentially using DFS
+        - exectue the commands in each node using fork, exec, or wait calls, in parallel
+        
+• Any assumptions outside this document (If you have any)
