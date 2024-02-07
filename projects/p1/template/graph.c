@@ -47,7 +47,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
 
     // Initialize each element in the DepGraph's AdjList array
     for(int i = 0; i < V; i++){
-        graph->array[i] = NULL; // **************************************************************** HOW IS graph->array[i] AN ADJLIST
+        graph->array[i].head = NULL; // ** as of here, graph->array[i] is an AdjList **
     }
 
     // Now, let's build edges to this DepGraph
@@ -73,15 +73,15 @@ void addEdge(struct DepGraph* graph, int src, int dest){
     // If the head of the AdjList array element at the index of src is null, 
     // we create a new node using newAdjListNode()
     // and make the head of the AdjList array element at the index of src points to it.
-    if (graph->array[src] == NULL){
-        graph->array[src] = newAdjListNode(dest);
+    if (graph->array[src].head == NULL){
+        graph->array[src].head = newAdjListNode(dest);
         return;
     }
 
     // If the head of the AdjList array element at the index of src is NOT null,
     // then we will traverse to the next AdjListNode until we find a node is pointing to a null.
     // Create a new node using newAdjListNode() and make the current node point to it.
-    struct AdjListNode* currentNode = graph->array[src];
+    struct AdjListNode* currentNode = graph->array[src].head;
     while (currentNode->next) {
         currentNode = currentNode->next;
     }

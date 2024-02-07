@@ -30,10 +30,12 @@ struct DepGraph{
 }; 
 
 // TODO: Declare functions in the graph.c
-// A utility function to create a new adjacency list node 
+// A utility function to create a new adjacency list node
+struct AdjListNode* newAdjListNode(int dest);
 
   
 // A utility function that creates a graph from the input text file
+struct DepGraph* createDepGraph(FILE *input, char cmds[][550]);
 
   
 // Adds an edge to an directed graph 
@@ -41,9 +43,11 @@ void addEdge(struct DepGraph* graph, int src, int dest);
 
 
 // Recursive DFS call
+void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode);
 
 
 // execute the generated graph
+void processGraph(struct DepGraph* graph, char cmds[][550], int mode);
 
 
 #endif
