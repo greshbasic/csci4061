@@ -97,10 +97,23 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
     // so that the execution of child nodes happened before the parent node.
     // If the mode is sequential, wait child process to finish before moving on to the next node.
     // If the mode is parallel, move on to the next node.
-    if(0){
 
-    }
     // Let's move on to complete the code that will be executed in each recursion.
+    // Open the results.txt file. If the file does not exist, then create one using c code.
+
+    // Get the PID of the current process and its parent process
+    // Write the PIDS and commands to the results.txt
+
+    // execute the command at the given node.
+    
+}
+
+void processGraph(struct DepGraph* graph, char cmds[][550], int mode){
+    int i;
+    int child = fork();
+    if (child == 0) {
+	   DFSVisit(graph, 0, cmds, mode);
+    }
     else {
         wait(NULL);
     }
