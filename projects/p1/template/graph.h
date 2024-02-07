@@ -37,6 +37,7 @@ struct DepGraph{
 
   
 // Adds an edge to an directed graph 
+void addEdge(struct DepGraph* graph, int src, int dest);
 
 
 // Recursive DFS call

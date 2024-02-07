@@ -42,18 +42,13 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
 
     // Then, initialize the value of V (Number of nodes), and Dynamically allocate the memory space to DepGraph's AdjList array
     V = numOfNodes;
-<<<<<<< HEAD
-    AdjList = (struct AdjListNode*) malloc(V * sizeof(struct AdjListNode));
-=======
     graph->array = (struct AdjList*) malloc(V * sizeof(struct AdjListNode*));
->>>>>>> 6cf879f7ed652a2f8a1fe29a963b551b420be911
 
 
     // Initialize each element in the DepGraph's AdjList array
     for(int i = 0; i < V; i++){
-        graph->array[i] = NULL;
+        graph->array[i] = NULL; // **************************************************************** HOW IS graph->array[i] AN ADJLIST
     }
-
 
     // Now, let's build edges to this DepGraph
     // Inside each loop iteration, use getline(), strtok(), and sscanf() to tokenize sources and destinations from the file.
@@ -65,7 +60,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
         read = getline(&line, &len, input);
         source = atoi(strtok(line, " "));
         dest = atoi(strtok(NULL, " "));
-        addEdge(*graph, source, dest);
+        addEdge(graph, source, dest);
         printf("%d. Added edge: (%d, %d)\n", i+1, source, dest);
     }
    
@@ -86,7 +81,7 @@ void addEdge(struct DepGraph* graph, int src, int dest){
     // If the head of the AdjList array element at the index of src is NOT null,
     // then we will traverse to the next AdjListNode until we find a node is pointing to a null.
     // Create a new node using newAdjListNode() and make the current node point to it.
-    struct AdjListNode* currentNode = graph[src];
+    struct AdjListNode* currentNode = graph->array[src];
     while (currentNode->next) {
         currentNode = currentNode->next;
     }
@@ -102,23 +97,10 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
     // so that the execution of child nodes happened before the parent node.
     // If the mode is sequential, wait child process to finish before moving on to the next node.
     // If the mode is parallel, move on to the next node.
+    if(0){
 
-    // Let's move on to complete the code that will be executed in each recursion.
-    // Open the results.txt file. If the file does not exist, then create one using c code.
-
-    // Get the PID of the current process and its parent process
-    // Write the PIDS and commands to the results.txt
-
-    // execute the command at the given node.
-    
-}
-
-void processGraph(struct DepGraph* graph, char cmds[][550], int mode){
-    int i;
-    int child = fork();
-    if (child == 0) {
-	   DFSVisit(graph, 0, cmds, mode);
     }
+    // Let's move on to complete the code that will be executed in each recursion.
     else {
         wait(NULL);
     }
