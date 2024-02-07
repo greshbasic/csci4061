@@ -1,3 +1,11 @@
+
+/*test machine: CSELAB_machine_name
+* date: mm/dd/yy
+* name: Gresham Basic, [full_name2]
+* x500: basic009, [id_for_second_name]
+*/
+
+
 #include "main.h"
 
 // hint: to access the files or directories in the parent directory, use "../name_of_your_data"
