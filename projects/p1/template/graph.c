@@ -42,7 +42,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
 
     // Then, initialize the value of V (Number of nodes), and Dynamically allocate the memory space to DepGraph's AdjList array
     V = numOfNodes;
-    graph->array = (struct AdjList*) malloc(V * sizeof(struct AdjListNode*));
+    graph->array = (struct AdjList*) malloc(V * sizeof(struct AdjList));
 
 
     // Initialize each element in the DepGraph's AdjList array
@@ -73,6 +73,7 @@ void addEdge(struct DepGraph* graph, int src, int dest){
     // If the head of the AdjList array element at the index of src is null, 
     // we create a new node using newAdjListNode()
     // and make the head of the AdjList array element at the index of src points to it.
+    printf("Adding new node to NULL head...\n");
     if (graph->array[src].head == NULL){
         graph->array[src].head = newAdjListNode(dest);
         return;
@@ -81,6 +82,7 @@ void addEdge(struct DepGraph* graph, int src, int dest){
     // If the head of the AdjList array element at the index of src is NOT null,
     // then we will traverse to the next AdjListNode until we find a node is pointing to a null.
     // Create a new node using newAdjListNode() and make the current node point to it.
+    printf("Adding new node to head\n");
     struct AdjListNode* currentNode = graph->array[src].head;
     while (currentNode->next) {
         currentNode = currentNode->next;
