@@ -12,7 +12,11 @@
 
 • How to compile the program
     - run "make" to compile everything
-    - can also run "make test1, make test2, ... make testN" to compile and run indivudual inputN files.
+    - can also run indivudual inputN files:
+        - make run<N><p if parallel mode>
+        - examples: 
+            - "make run3p" will compile and then run "./depGraph -p ../testcases/input3.txt"
+            - "make run1" will compile and then run "./depGraph ../testcases/input1.txt"
 
 • The purpose of your program
     The purpose of this program is to take a given dependancy graph and execute the commands in its nodes.
