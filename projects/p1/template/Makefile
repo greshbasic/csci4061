@@ -25,6 +25,22 @@ run4: main
 run5: main
 	./depGraph ../testcases/input5.txt
 
+run1p: main
+	./depGraph -p ../testcases/input1.txt
+
+run2p: main
+	./depGraph -p ../testcases/input2.txt
+
+run3p: main
+	./depGraph -p ../testcases/input3.txt
+
+run4p: main
+	./depGraph -p ../testcases/input4.txt
+
+run5p: main
+	./depGraph -p ../testcases/input5.txt
+
+
 clean : 
 	rm *.o
 	rm *.h.gch
