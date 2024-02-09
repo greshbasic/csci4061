@@ -19,6 +19,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     char *token;
     int source;
     int dest;
+    int i = 0;
 
 
     // First, let's read the number of nodes and all commands from the input file!
@@ -33,7 +34,9 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     // We won't do anything to cmds[][550] in this function OTHER THAN reading all commands from it.
     read = getline(&line, &len, input);
     while(line[0] != '\n'){
-        read = getline(&line, &len, input);
+        read = getline(&line, &len, input); 
+        strcpy(cmds[i], line);         // do stuff here ig.
+        i += 1;
     }
 
     // Now, let's move to Graph Creation!
@@ -121,6 +124,7 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
     pid_t ppid = getppid();
         
     // Write the PIDS and commands to the results.txt
+    printf("%s %s %s\n", cmds[0], cmds[1], cmds[2]);
     fprintf(results, "%d %d %s\n", pid, ppid, cmds[node]);
 
     // execute the command at the given node.
@@ -128,7 +132,7 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
 
     fclose(results);
 
-    // *** Output for input1.txt ***
+    // *** Sampe output for input1.txt ***
     // 5346 5345 /bin/pwd
     // 5348 5347 echo Hello
     // 5347 5345 echo Hello There

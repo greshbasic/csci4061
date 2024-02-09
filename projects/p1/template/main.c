@@ -1,6 +1,6 @@
 
-/*test machine: CSELAB_machine_name
-* date: mm/dd/yy
+/*test machine: csel-kh1262-18
+* date: 02/9/24
 * name: Gresham Basic, [full_name2]
 * x500: basic009, [id_for_second_name]
 */
@@ -74,8 +74,6 @@ int main(int argc, char **argv) {
 
 	// // Deallocaating the now "empty" DepGraph
 	// free(depGraph);
-
-
 
 	return 0;
 }
