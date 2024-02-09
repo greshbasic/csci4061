@@ -10,7 +10,7 @@
 
 // hint: to access the files or directories in the parent directory, use "../name_of_your_data"
 int main(int argc, char **argv) {
-	printf(" >> Made it to the very beginning\n");
+	// printf(" >> Made it to the very beginning\n");
 	// Validate command-line argument.
 	// Uncomment section below and fill out the condition of the if branch
 	if (argc < 2 || argc > 3) {
@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
 	FILE *input;
 
 	// Uncomment the section below and complete the fopen arguments
-	printf(" >> Made it to mode setting\n");
+	// printf(" >> Made it to mode setting\n");
 	if (argc == 2) {
 		mode = 0;
 		input = fopen(argv[1], "r");
@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
-	printf(" >> Made it to graph creation\n");
+	// printf(" >> Made it to graph creation\n");
 
 	char cmds[32][550];
 	struct DepGraph *depGraph = createDepGraph(input, cmds);
@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
 
 	processGraph(depGraph, cmds, mode);
 
-	printf(" >> Made it all the way to the end\n");
+	// printf(" >> Made it all the way to the end\n");
 
 	// Not sure about this, I wonder if child process relies on parent process existing until the very very end
 	// because I am getting "Conditional jump or move depends on uninitialised value(s)" errors when the following code is uncommented.

@@ -61,7 +61,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
         source = atoi(strtok(line, " "));
         dest = atoi(strtok(NULL, " "));
         addEdge(graph, source, dest);
-        printf("%d. Added edge: (%d, %d)\n", i+1, source, dest);
+        // printf("%d. Added edge: (%d, %d)\n", i+1, source, dest);
     }
    
     return graph; 
@@ -73,7 +73,7 @@ void addEdge(struct DepGraph* graph, int src, int dest){
     // If the head of the AdjList array element at the index of src is null, 
     // we create a new node using newAdjListNode()
     // and make the head of the AdjList array element at the index of src points to it.
-    printf("Adding new node to NULL head...\n");
+    // printf("Adding new node to NULL head...\n");
     if (graph->array[src].head == NULL){
         graph->array[src].head = newAdjListNode(dest);
         return;
@@ -82,7 +82,7 @@ void addEdge(struct DepGraph* graph, int src, int dest){
     // If the head of the AdjList array element at the index of src is NOT null,
     // then we will traverse to the next AdjListNode until we find a node is pointing to a null.
     // Create a new node using newAdjListNode() and make the current node point to it.
-    printf("Adding new node to head\n");
+    // printf("Adding new node to head\n");
     struct AdjListNode* currentNode = graph->array[src].head;
     while (currentNode->next) {
         currentNode = currentNode->next;
@@ -95,19 +95,44 @@ void addEdge(struct DepGraph* graph, int src, int dest){
 // TODO: This function writes the DephGraph to the output file and executes the commands.
 // Please take a close look at the file structure on page 3, section 5, "Sample Output".
 void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
-    // Use RECURSION to traverse the node in DepGraph's AdjList array, 
-    // so that the execution of child nodes happened before the parent node.
-    // If the mode is sequential, wait child process to finish before moving on to the next node.
-    // If the mode is parallel, move on to the next node.
+
+    if(graph->array[node].visit){
+        return;
+    }
+    graph->array[node].visit = 1;
+
+    struct AdjListNode* currentNode = graph->array[node].head;
+    while (currentNode) {
+        DFSVisit(graph, currentNode->dest, cmds, mode); // Use RECURSION to traverse the node in DepGraph's AdjList array, 
+                                                        // so that the execution of child nodes happened before the parent node.
+        if (!mode) {    // If the mode is sequential, wait child process to finish before moving on to the next node.
+            wait(NULL);
+        }
+        currentNode = currentNode->next; // If the mode is parallel, move on to the next node.
+    }
 
     // Let's move on to complete the code that will be executed in each recursion.
     // Open the results.txt file. If the file does not exist, then create one using c code.
+    FILE *results;
+    results = fopen("results.txt", "a");
 
     // Get the PID of the current process and its parent process
+    pid_t pid = getpid();
+    pid_t ppid = getppid();
+        
     // Write the PIDS and commands to the results.txt
+    fprintf(results, "%d %d %s\n", pid, ppid, cmds[node]);
 
     // execute the command at the given node.
-    
+    system(cmds[node]);
+
+    fclose(results);
+
+    // *** Output for input1.txt ***
+    // 5346 5345 /bin/pwd
+    // 5348 5347 echo Hello
+    // 5347 5345 echo Hello There
+    // 5345 5344 /bin/ls -l
 }
 
 void processGraph(struct DepGraph* graph, char cmds[][550], int mode){
