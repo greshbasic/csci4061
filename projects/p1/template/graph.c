@@ -35,7 +35,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     read = getline(&line, &len, input);
     while(line[0] != '\n'){
         read = getline(&line, &len, input); 
-        strcpy(cmds[i], line);         // do stuff here ig.
+        strcpy(cmds[i], line);         
         i += 1;
     }
 
@@ -58,7 +58,6 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     // Sources and destinations represent edges between commands. (please refer to figure 1 in project1.pdf)
     // Add edge to the DepGraph using addEdge(), source, and destination
  
-
     for(int i = 0; i < V-1; i++){
         read = getline(&line, &len, input);
         source = atoi(strtok(line, " "));
@@ -124,8 +123,7 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
     pid_t ppid = getppid();
         
     // Write the PIDS and commands to the results.txt
-    printf("%s %s %s\n", cmds[0], cmds[1], cmds[2]);
-    fprintf(results, "%d %d %s\n", pid, ppid, cmds[node]);
+    fprintf(results, "%d %d %s\n", pid, ppid, cmds[node]);  // not reading final command, and out of order
 
     // execute the command at the given node.
     system(cmds[node]);
