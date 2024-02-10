@@ -11,7 +11,6 @@ main.o: main.c main.h
 .PHONY: clean
 
 run1: main
-	rm results.txt
 	./depGraph ../testcases/input1.txt
 
 run2: main

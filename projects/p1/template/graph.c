@@ -123,7 +123,7 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
     pid_t ppid = getppid();
         
     // Write the PIDS and commands to the results.txt
-    fprintf(results, "%d %d %s\n", pid, ppid, cmds[node]);  // not reading final command, and out of order
+    fprintf(results, "%d %d %s", pid, ppid, cmds[node]);  // not reading final command, and backwards
 
     // execute the command at the given node.
     system(cmds[node]);
@@ -131,10 +131,16 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
     fclose(results);
 
     // *** Sampe output for input1.txt ***
-    // 5346 5345 /bin/pwd
+    // 5346 5345 /bin/pwd                                  
     // 5348 5347 echo Hello
     // 5347 5345 echo Hello There
     // 5345 5344 /bin/ls -l
+
+
+    // 1366 1365 echo Hello There
+    // 1366 1365 
+    // 1366 1365 echo Hello
+    // 1366 1365 /bin/pwd
 }
 
 void processGraph(struct DepGraph* graph, char cmds[][550], int mode){
