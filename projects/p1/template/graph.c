@@ -18,7 +18,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     struct AdjList* array;
     char *token;
     int source;
-    int dest;
+    int destination;
     int tracker = 0;
 
 
@@ -39,7 +39,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     // 3. Read all commands from the file using a loop until reach the source-destination section (reaches a newline character '\n')
     // We won't do anything to cmds[][550] in this function OTHER THAN reading all commands from it.
     read = getline(&line, &len, input);
-    while (read >= 0 && strcmp(line, "\n") != 0) {
+    while (read >= 0 && strcmp(line, "\n")) {
         strcpy(cmds[tracker], line);
         tracker += 1;
         read = getline(&line, &len, input);
@@ -66,12 +66,10 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
  
     read = getline(&line, &len, input);
     while (read >= 0) {                                      // read went thru
-        char *currentToken = strtok(line, " \n");
+        char *currentToken = strtok(line, " ");
         if (currentToken) {                                 // if there is something here
-            int destination;
-            int source;
             sscanf(currentToken, "%d", &source);            // assign it to source
-            currentToken = strtok(NULL, " \n");
+            currentToken = strtok(NULL, " ");               // next token
             if (currentToken) {                             // if there is something else here
                 sscanf(currentToken, "%d", &destination);   // assign it to destination
                 addEdge(graph, source, destination);
@@ -121,22 +119,43 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
     graph->array[node].visit = 1;
 
     struct AdjListNode* currentNode = graph->array[node].head;
-    while (currentNode) {
-        pid_t pid = fork();
-        if (pid < 0) {
-            perror("Fork failed");
-            exit(1);
-        } else if (pid == 0) {
-            DFSVisit(graph, currentNode->dest, cmds, mode); // Use RECURSION to traverse the node in DepGraph's AdjList array, 
-                                                            // so that the execution of child nodes happened before the parent node.
-            exit(0);
-        } else {
-            if (!mode) {
+    if (!mode) {  // sequential
+        while (currentNode) {
+            pid_t pid = fork();
+            if (pid < 0) {
+                perror("Fork failed");
+                exit(1);
+            } else if (pid == 0) {
+                DFSVisit(graph, currentNode->dest, cmds, mode); // Use RECURSION to traverse the node in DepGraph's AdjList array, 
+                                                                // so that the execution of child nodes happened before the parent node.
+                exit(0);
+            } else {
                 waitpid(pid, NULL, 0);                      // If the mode is sequential, wait child process to finish before moving on to the next node.
+                currentNode = currentNode->next;             
             }
-            currentNode = currentNode->next;                // If the mode is parallel, move on to the next node.
+        }
+    } else {    // parallel
+        while (currentNode) {
+            pid_t pid = fork();
+            if (pid < 0) {
+                perror("Fork failed");
+                exit(1);
+            } else if (pid == 0) {
+                DFSVisit(graph, currentNode->dest, cmds, mode); // Use RECURSION to traverse the node in DepGraph's AdjList array, 
+                                                                // so that the execution of child nodes happened before the parent node.
+                exit(0);
+            } else {
+                currentNode = currentNode->next;                // If the mode is parallel, move on to the next node.
+            }     
+        }
+
+        int wait_result = wait(NULL);                           // parallel stuff
+        while (wait_result > 0) {
+            wait_result = wait(NULL);
         }
     }
+
+
     
 
     // Let's move on to complete the code that will be executed in each recursion.
@@ -152,8 +171,31 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
     fprintf(results, "%d %d %s", pid, ppid, cmds[node]);
     fclose(results);
 
+
     // execute the command at the given node.
-    system(cmds[node]);
+
+    //system(cmds[node]);
+
+    char cmds_clone[550];
+    int tracker = 0;
+    char *tokens[100];                               // arbitrary size, disregard
+    strcpy(cmds_clone, cmds[node]);                  // HAS to be a copy so doesn't mess with child processes accessing cmds
+
+    char *current_token = strtok(cmds_clone, " ");   // get first token
+    while(current_token){                            // as long as there is a token to examine, keep going
+        if(tracker < 99){                            // just in case to prevent error
+            for (int i = 0; i < strlen(current_token); i++) {
+                if (current_token[i] == '\n') {
+                    current_token[i] = '\0';        // remove newline (there HAS to be a better way to do this, look into it)
+                }
+            }
+            tokens[tracker] = current_token;    
+            current_token = strtok(NULL, " ");       // get next token, delimited by a space
+            tracker += 1;
+        }
+    }
+ 
+    execvp(tokens[0], tokens);
 
 }
 
