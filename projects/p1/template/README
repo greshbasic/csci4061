@@ -1,24 +1,16 @@
-
-/*test machine: csel-kh1262-18
-* date: 02/9/24
-* name: Gresham Basic, [full_name2]
-* x500: basic009, [id_for_second_name]
-*/
-
-
-• test machine, date, team member names, and x500 [X]
-
+* test machine: csel-kh1262-18
+* date: 02/09/24
+* name: Gresham Basic, Elaine Nguyen
+* x500: basic009, nguy4546
 
 • Your and your partners' contributions
-
+    Equal contributions, worked hand in hand for all parts
 
 • How to compile the program
     - run "make" to compile everything
     - can also run indivudual inputN files:
-        - make run<N><p if parallel mode>
-        - examples: 
-            - "make run3p" will compile and then run "./depGraph -p ../testcases/input3.txt"
-            - "make run1" will compile and then run "./depGraph ../testcases/input1.txt"
+        - make run<N>
+        - example: make run1 will compile and run the program in both modes with input1.txt
 
 • The purpose of your program
     The purpose of this program is to take a given dependancy graph and execute the commands in its nodes.
@@ -28,4 +20,3 @@
         - execute the commands in each node using fork, exec, or wait calls, sequentially using DFS
         - exectue the commands in each node using fork, exec, or wait calls, in parallel
         
-• Any assumptions outside this document (If you have any)

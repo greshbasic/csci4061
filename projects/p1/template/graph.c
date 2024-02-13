@@ -7,8 +7,7 @@ struct AdjListNode* newAdjListNode(int dest){
     return newNode; 
 }  
 
-// TODO: This function is to read files. And based on the file content, build a DepGraph (please refer to figure 1 in project1.pdf).
-// Please take a close look at the file structure on page 2, section 4, "Sample Input."
+// creates and initializes fields of DepGraph struct, creating necessary nodes and edges
 struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
 	ssize_t read;
 	size_t len = 0;
@@ -81,8 +80,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     return graph; 
 }
 
-// TODO: This function adds an edge to the node inside DepGraph's AdjList array. 
-// Recall how to insert elements to the linked list in lab 1.
+// links nodes together where the link is the "edge"
 void addEdge(struct DepGraph* graph, int src, int dest){
     // If the head of the AdjList array element at the index of src is null, 
     // we create a new node using newAdjListNode()
@@ -106,8 +104,9 @@ void addEdge(struct DepGraph* graph, int src, int dest){
     return;
 }
 
-// TODO: This function writes the DephGraph to the output file and executes the commands.
-// Please take a close look at the file structure on page 3, section 5, "Sample Output".
+// performs a DFS on graph, either in parallel or sequentially depending on 'mode.'
+// writes pid, ppid, and command at each node to results.txt
+// executes the given command
 void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
 
     // visited already
@@ -181,16 +180,16 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
     char *tokens[100];                               // arbitrary size, disregard
     strcpy(cmds_clone, cmds[node]);                  // HAS to be a copy so doesn't mess with child processes accessing cmds
 
-    char *current_token = strtok(cmds_clone, " ");   // get first token
-    while(current_token){                            // as long as there is a token to examine, keep going
+    char *currentToken = strtok(cmds_clone, " ");   // get first token
+    while(currentToken){                            // as long as there is a token to examine, keep going
         if(tracker < 99){                            // just in case to prevent error
-            for (int i = 0; i < strlen(current_token); i++) {
-                if (current_token[i] == '\n') {
-                    current_token[i] = '\0';        // remove newline (there HAS to be a better way to do this, look into it)
+            for (int i = 0; i < strlen(currentToken); i++) {
+                if (currentToken[i] == '\n') {
+                    currentToken[i] = '\0';        // remove newline (there HAS to be a better way to do this, look into it)
                 }
             }
-            tokens[tracker] = current_token;    
-            current_token = strtok(NULL, " ");       // get next token, delimited by a space
+            tokens[tracker] = currentToken;    
+            currentToken = strtok(NULL, " ");       // get next token, delimited by a space
             tracker += 1;
         }
     }
