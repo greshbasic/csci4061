@@ -1,4 +1,4 @@
-1366 1365 echo Hello There
-1366 1365 
-1366 1365 echo Hello
-1366 1365 /bin/pwd
+7505 7504 /bin/pwd
+7509 7508 echo Hello
+7508 7504 echo Hello There
+7504 7503 /bin/ls F1 -l

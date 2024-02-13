@@ -33,10 +33,10 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     // 3. Read all commands from the file using a loop until reach the source-destination section (reaches a newline character '\n')
     // We won't do anything to cmds[][550] in this function OTHER THAN reading all commands from it.
     read = getline(&line, &len, input);
-    while(line[0] != '\n'){
-        read = getline(&line, &len, input); 
-        strcpy(cmds[i], line);         
-        i += 1;
+    while (read != -1 && strcmp(line, "\n") != 0) {
+        strcpy(cmds[i], line);
+        i++;
+        read = getline(&line, &len, input);
     }
 
     // Now, let's move to Graph Creation!
@@ -50,7 +50,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
 
     // Initialize each element in the DepGraph's AdjList array
     for(int i = 0; i < V; i++){
-        graph->array[i].head = NULL; // ** as of here, graph->array[i] is an AdjList **
+        graph->array[i].head = NULL;
     }
 
     // Now, let's build edges to this DepGraph
@@ -58,12 +58,20 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     // Sources and destinations represent edges between commands. (please refer to figure 1 in project1.pdf)
     // Add edge to the DepGraph using addEdge(), source, and destination
  
-    for(int i = 0; i < V-1; i++){
+    read = getline(&line, &len, input);
+    while (read > 0) {                                    // read is OK
+        char *currentToken = strtok(line, " \n");
+        if (currentToken) {                                 // if there is something here
+            int destination;
+            int source;
+            sscanf(currentToken, "%d", &source);            // assign it to source
+            currentToken = strtok(NULL, " \n");
+            if (currentToken) {                             // if there is something else here
+                sscanf(currentToken, "%d", &destination);   // assign it to destination
+                addEdge(graph, source, destination);
+            }
+        }
         read = getline(&line, &len, input);
-        source = atoi(strtok(line, " "));
-        dest = atoi(strtok(NULL, " "));
-        addEdge(graph, source, dest);
-        // printf("%d. Added edge: (%d, %d)\n", i+1, source, dest);
     }
    
     return graph; 
@@ -98,19 +106,29 @@ void addEdge(struct DepGraph* graph, int src, int dest){
 // Please take a close look at the file structure on page 3, section 5, "Sample Output".
 void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
 
-    if(graph->array[node].visit){
+    // visited already
+    if (graph->array[node].visit) {
         return;
     }
+
+    // now visited
     graph->array[node].visit = 1;
 
-    struct AdjListNode* currentNode = graph->array[node].head;
-    while (currentNode) {
-        DFSVisit(graph, currentNode->dest, cmds, mode); // Use RECURSION to traverse the node in DepGraph's AdjList array, 
-                                                        // so that the execution of child nodes happened before the parent node.
-        if (!mode) {    // If the mode is sequential, wait child process to finish before moving on to the next node.
-            wait(NULL);
+    if (!mode) {
+        struct AdjListNode* currentNode = graph->array[node].head;
+        while (currentNode) {
+            pid_t pid = fork();
+            if (pid < 0) {
+                perror("Fork failed");
+                exit(1);
+            } else if (pid == 0) {
+                DFSVisit(graph, currentNode->dest, cmds, mode);
+                exit(0);
+            } else {
+                waitpid(pid, NULL, 0);
+                currentNode = currentNode->next;
+            }
         }
-        currentNode = currentNode->next; // If the mode is parallel, move on to the next node.
     }
 
     // Let's move on to complete the code that will be executed in each recursion.
@@ -123,24 +141,24 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
     pid_t ppid = getppid();
         
     // Write the PIDS and commands to the results.txt
-    fprintf(results, "%d %d %s", pid, ppid, cmds[node]);  // not reading final command, and backwards
+    fprintf(results, "%d %d %s", pid, ppid, cmds[node]);
+    fclose(results);
 
     // execute the command at the given node.
     system(cmds[node]);
+    // char cmds_clone[550];
+    // int tracker = 0;
+    // char *tokens[100];
+    // strcpy(cmds_clone, cmds[node]);
 
-    fclose(results);
+    // char *current_token = strtok(cmds_clone, " ");
+    // while(current_token){
+    //     tokens[tracker] = current_token;
+    //     current_token = strtok(NULL, " ");
+    //     tracker += 1;
+    // }
 
-    // *** Sampe output for input1.txt ***
-    // 5346 5345 /bin/pwd                                  
-    // 5348 5347 echo Hello
-    // 5347 5345 echo Hello There
-    // 5345 5344 /bin/ls -l
-
-
-    // 1366 1365 echo Hello There
-    // 1366 1365 
-    // 1366 1365 echo Hello
-    // 1366 1365 /bin/pwd
+    // execvp(tokens[0], tokens);
 }
 
 void processGraph(struct DepGraph* graph, char cmds[][550], int mode){
