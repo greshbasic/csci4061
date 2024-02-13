@@ -39,7 +39,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     // 3. Read all commands from the file using a loop until reach the source-destination section (reaches a newline character '\n')
     // We won't do anything to cmds[][550] in this function OTHER THAN reading all commands from it.
     read = getline(&line, &len, input);
-    while (read > 0 && strcmp(line, "\n") != 0) {
+    while (read >= 0 && strcmp(line, "\n") != 0) {
         strcpy(cmds[tracker], line);
         tracker += 1;
         read = getline(&line, &len, input);
@@ -65,7 +65,7 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     // Add edge to the DepGraph using addEdge(), source, and destination
  
     read = getline(&line, &len, input);
-    while (read > 0) {                                    // read is OK
+    while (read >= 0) {                                      // read went thru
         char *currentToken = strtok(line, " \n");
         if (currentToken) {                                 // if there is something here
             int destination;
@@ -154,19 +154,7 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
 
     // execute the command at the given node.
     system(cmds[node]);
-    // char cmds_clone[550];
-    // int tracker = 0;
-    // char *tokens[100];
-    // strcpy(cmds_clone, cmds[node]);
 
-    // char *current_token = strtok(cmds_clone, " ");
-    // while(current_token){
-    //     tokens[tracker] = current_token;
-    //     current_token = strtok(NULL, " ");
-    //     tracker += 1;
-    // }
-
-    // execvp(tokens[0], tokens);
 }
 
 void processGraph(struct DepGraph* graph, char cmds[][550], int mode){
