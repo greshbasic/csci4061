@@ -50,30 +50,25 @@ int main(int argc, char **argv) {
 	fclose(input);
 
 	processGraph(depGraph, cmds, mode);
-
-	// printf(" >> Made it all the way to the end\n");
-
-	// Not sure about this, I wonder if child process relies on parent process existing until the very very end
-	// because I am getting "Conditional jump or move depends on uninitialised value(s)" errors when the following code is uncommented.
 	
-	// // Deallocating memory
-	// for(int i = 0; i < depGraph->V; i++){
+	// Deallocating memory
+	for(int i = 0; i < depGraph->V; i++){
 
-	// 	// Deallocating for each individual node in given AdjList
-	// 	struct AdjListNode* currentNode = depGraph->array[i].head;
-	// 	while (currentNode->next) {
-	// 		struct AdjListNode* toBeFreedNode = currentNode;
-	// 		currentNode = currentNode->next;
-	// 		free(toBeFreedNode);
-    // 	}
+		// Deallocating for each individual node in given AdjList
+		struct AdjListNode* currentNode = depGraph->array[i].head;
+		while (currentNode->next) {
+			struct AdjListNode* toBeFreedNode = currentNode;
+			currentNode = currentNode->next;
+			free(toBeFreedNode);
+    	}
 
-	// }
+	}
 	
-	// // Deallocating the now "empty" AdjList
-	// free(depGraph->array);
+	// Deallocating the now "empty" AdjList
+	free(depGraph->array);
 
-	// // Deallocaating the now "empty" DepGraph
-	// free(depGraph);
+	// Deallocaating the now "empty" DepGraph
+	free(depGraph);
 
 	return 0;
 }

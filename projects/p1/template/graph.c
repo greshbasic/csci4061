@@ -196,6 +196,7 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
     }
  
     execvp(tokens[0], tokens);
+    
 
 }
 
