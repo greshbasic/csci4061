@@ -19,23 +19,29 @@ struct DepGraph* createDepGraph(FILE *input, char cmds[][550]){
     char *token;
     int source;
     int dest;
-    int i = 0;
+    int tracker = 0;
 
 
     // First, let's read the number of nodes and all commands from the input file!
     // 1. Get the number of nodes using getline() and sscanf()
     read = getline(&line, &len, input);
+    if (read < 0 ){
+        exit(1);
+    }
     sscanf(line, "%d", &numOfNodes);
 
     // 2. Skip the blank line.
     read = getline(&line, &len, input);
+    if (read < 0 ){
+        exit(1);
+    }
 
     // 3. Read all commands from the file using a loop until reach the source-destination section (reaches a newline character '\n')
     // We won't do anything to cmds[][550] in this function OTHER THAN reading all commands from it.
     read = getline(&line, &len, input);
-    while (read != -1 && strcmp(line, "\n") != 0) {
-        strcpy(cmds[i], line);
-        i++;
+    while (read > 0 && strcmp(line, "\n") != 0) {
+        strcpy(cmds[tracker], line);
+        tracker += 1;
         read = getline(&line, &len, input);
     }
 
@@ -114,22 +120,24 @@ void DFSVisit(struct DepGraph* graph, int node, char cmds[][550], int mode) {
     // now visited
     graph->array[node].visit = 1;
 
-    if (!mode) {
-        struct AdjListNode* currentNode = graph->array[node].head;
-        while (currentNode) {
-            pid_t pid = fork();
-            if (pid < 0) {
-                perror("Fork failed");
-                exit(1);
-            } else if (pid == 0) {
-                DFSVisit(graph, currentNode->dest, cmds, mode);
-                exit(0);
-            } else {
-                waitpid(pid, NULL, 0);
-                currentNode = currentNode->next;
+    struct AdjListNode* currentNode = graph->array[node].head;
+    while (currentNode) {
+        pid_t pid = fork();
+        if (pid < 0) {
+            perror("Fork failed");
+            exit(1);
+        } else if (pid == 0) {
+            DFSVisit(graph, currentNode->dest, cmds, mode); // Use RECURSION to traverse the node in DepGraph's AdjList array, 
+                                                            // so that the execution of child nodes happened before the parent node.
+            exit(0);
+        } else {
+            if (!mode) {
+                waitpid(pid, NULL, 0);                      // If the mode is sequential, wait child process to finish before moving on to the next node.
             }
+            currentNode = currentNode->next;                // If the mode is parallel, move on to the next node.
         }
     }
+    
 
     // Let's move on to complete the code that will be executed in each recursion.
     // Open the results.txt file. If the file does not exist, then create one using c code.
