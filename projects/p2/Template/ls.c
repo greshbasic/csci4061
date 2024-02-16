@@ -4,8 +4,17 @@
 #include<string.h>
 #include <stdbool.h>
 
+void ls_rec_help(char *path, bool recurse_flag) {
+	
+}
+
 void ls(char *path, bool recurse_flag) {
 	/* Insert code here*/
+	if (path) {
+		ls_rec_help(path, recurse_flag);
+	} else {
+		ls_rec_help(".", recurse_flag);
+	}
 }
 
 int main(int argc, char *argv[]){
