@@ -4,8 +4,13 @@
 #include<string.h>
 #include <stdbool.h>
 
+
+#include <dirent.h>		// for scandir and readdir
+#include <sys/stat.h>   // for stat
+
 void ls_rec_help(char *path, bool recurse_flag) {
-	
+	struct dirent *dir;
+
 }
 
 void ls(char *path, bool recurse_flag) {
