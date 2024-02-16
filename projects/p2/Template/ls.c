@@ -9,8 +9,45 @@
 #include <sys/stat.h>   // for stat
 
 void ls_rec_help(char *path, bool recurse_flag) {
-	struct dirent *dir;
+	struct dirent *dir_entry;
+	struct stat s;
+	DIR *dir;
 
+	dir = opendir(path);
+	if (!dir) {
+		perror("ls");
+	}
+
+	dir_entry = readdir(dir);
+	while (dir_entry) {
+
+		// getting specific path in order to evaluate if looking at a dir or a file
+		char this_path[100];
+		strcpy(this_path, path);
+		strcat(this_path, "/");
+		strcat(this_path, dir_entry->d_name);
+
+		int stat_status = stat(this_path, &s);
+		if (stat_status < 0) {
+			perror("ls");
+		}
+
+		int is_not_current_dir = strcmp(dir_entry->d_name, ".");
+		int is_not_parent_dir = strcmp(dir_entry->d_name, "..");
+
+		if (is_not_current_dir && is_not_parent_dir) {
+			if (S_ISDIR(s.st_mode)) {
+				printf("\n./%s: \n", dir_entry->d_name);
+				if (recurse_flag) {
+					ls_rec_help(this_path, recurse_flag);	// recurse with this deeper path into a new dir
+					printf("\n");
+				}
+			} else {
+				printf("%s ", dir_entry->d_name);
+			}
+		}
+		dir_entry = readdir(dir);
+	}
 }
 
 void ls(char *path, bool recurse_flag) {
@@ -20,6 +57,7 @@ void ls(char *path, bool recurse_flag) {
 	} else {
 		ls_rec_help(".", recurse_flag);
 	}
+	printf("\n");
 }
 
 int main(int argc, char *argv[]){

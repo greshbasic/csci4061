@@ -5,7 +5,7 @@ util.o: util.c util.h
 	gcc -c util.c
 
 build: ls wc cd 
-	echo "Build completed"
+	@echo "Build completed"
 
 ls: ls.c
 	gcc ls.c -o ls
