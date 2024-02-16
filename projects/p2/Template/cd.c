@@ -4,6 +4,17 @@
 
 void cd(char* arg){
 	/*insert code here*/
+	if (chdir(arg)) {
+		perror("cd");
+	}
+
+	char current_dir[100];
+	if (getcwd(current_dir, sizeof(current_dir))) {
+		printf("%s\n", current_dir);
+	} else {
+		perror("pwd");
+	}
+	
 }
 
 int main(int argc, char** argv){
