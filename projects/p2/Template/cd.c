@@ -6,6 +6,7 @@ void cd(char* arg){
 	/*insert code here*/
 	if (chdir(arg)) {
 		perror("cd");
+		return;
 	}
 
 	char current_dir[100];
@@ -13,8 +14,10 @@ void cd(char* arg){
 		printf("%s\n", current_dir);
 	} else {
 		perror("pwd");
+		return;
 	}
 	
+	return;
 }
 
 int main(int argc, char** argv){
@@ -24,5 +27,5 @@ int main(int argc, char** argv){
 		return 0;
 	}
 	cd(argv[1]);
-	return 0;
+	return 0; 
 }
