@@ -39,12 +39,12 @@ void ls_rec_help(char *path, bool recurse_flag) {
 
 		if (is_not_current_dir && is_not_parent_dir) {
 			if (S_ISDIR(s.st_mode)) {
-				printf("./%s ", dir_entry->d_name);
+				printf("%s\n", dir_entry->d_name);
 				if (recurse_flag) {
 					ls_rec_help(this_path, recurse_flag);	// recurse with this deeper path into a new dir
 				}
 			} else {
-				printf("%s ", dir_entry->d_name);
+				printf("%s\n", dir_entry->d_name);
 			}
 		}
 		dir_entry = readdir(dir);
