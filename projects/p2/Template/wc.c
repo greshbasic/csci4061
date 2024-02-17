@@ -44,32 +44,30 @@ int wc_c(char* path){
 	return char_count;
 }
 
-void wc_all(char* path){
-	int line_count = wc_l(path);
-	int word_count = wc_w(path);
-	int char_count = wc_c(path);
-
-	printf("%d %d %d %s\n", line_count, word_count, char_count, path);
-}
-
 void wc(int mode, char* path){
 	/*Feel free to change the templates as needed*/
 	/*insert code here*/
-	int count;
+	int line_count;
+	int word_count;
+	int char_count;
 
 	if (mode == 1) {
-		count = wc_l(path);
+		line_count = wc_l(path);
+		printf(" %d %s\n", line_count, path);
 	} else if (mode == 2) {
-		count = wc_w(path);
+		word_count = wc_w(path);
+		printf(" %d %s\n", word_count, path);
 	} else if (mode == 3) {
-		count = wc_c(path);
+		char_count = wc_c(path);
+		printf(" %d %s\n", char_count, path);
 	} else {
-		wc_all(path);
+		line_count = wc_l(path);
+		word_count = wc_w(path);
+		char_count = wc_c(path);
+		printf(" %d  %d %d %s\n", line_count, word_count, char_count, path);
 		return;
 	}
 
-	printf("%d %s\n", count, path);
-	return;
 }
 
 int main(int argc, char** argv){
