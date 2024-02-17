@@ -65,9 +65,7 @@ void wc(int mode, char* path){
 		word_count = wc_w(path);
 		char_count = wc_c(path);
 		printf(" %d  %d %d %s\n", line_count, word_count, char_count, path);
-		return;
 	}
-
 }
 
 int main(int argc, char** argv){
