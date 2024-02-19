@@ -11,4 +11,19 @@
 
 int main(){
 	/*write code here*/
+	bool cont = true;
+	char cwd[1000];
+	char input[500];
+
+	getcwd(cwd, sizeof(cwd));
+	while (cont) {
+		char prompt[500] = "[4061-shell]";
+		strcat(prompt, cwd);
+		printf("%s $ ", prompt);
+		scanf("%s", input);
+		if (strcmp("exit", input) == 0) {
+			cont = false;
+		}
+	}
+	return 0;
 }
