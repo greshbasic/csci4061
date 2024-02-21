@@ -53,7 +53,14 @@ void ls_rec_help(char *path, bool recurse_flag) {
 }
 
 void ls(char *path, bool recurse_flag) {
-	/* Insert code here*/
+	char current_dir[100];
+	if (getcwd(current_dir, sizeof(current_dir))) { 
+		printf("Currently in: %s\n", current_dir);
+	} else {
+		perror("ls");
+		return;
+	}
+
 	if (path) {
 		ls_rec_help(path, recurse_flag);
 	} else {  

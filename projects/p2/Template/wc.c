@@ -81,8 +81,6 @@ int wc_c(char* path){
 }
 
 void wc(int mode, char* path){
-	/*Feel free to change the templates as needed*/
-	/*insert code here*/
 	int line_count;
 	int word_count;
 	int char_count;

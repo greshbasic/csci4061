@@ -93,6 +93,7 @@ int main() {
 		}
 
 		if (command_number == 3) {
+			printf("Exiting shell\n");
 			exit(0);
 		}	
 	}
