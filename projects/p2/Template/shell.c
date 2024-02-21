@@ -42,22 +42,26 @@ int main() {
 		
 		command_number = get_command_type(tokens[0]);
 		if (command_number == 0) {
-			// check for recursive flag
 			pid_t pid = fork();
 			if (pid < 0) {
 				perror("fork");
 			} else if (pid == 0) {
+				if (tokens[1] == NULL) {
+					execlp("./ls", "ls", NULL);
+				}
+
 				if (strcmp(tokens[1], "-R") == 0) {
 					execlp("./ls", "ls", "-R", tokens[2], NULL);
-				} else {
+				} else if (tokens[1] != NULL) {
 					execlp("./ls", "ls", tokens[1], NULL);
-				}
+				} 
+
 			} else {
 				wait(NULL);
 			}
 		}
 
-		// it doesnt stay in the directory after executing the command
+		// it doesnt actually stay in the directory after executing the command
 		if (command_number == 1) {
 			pid_t pid = fork();
 			if (pid < 0) {
