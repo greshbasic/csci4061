@@ -3,7 +3,7 @@ all: shell.c util.o build
 
 util.o: util.c util.h
 	gcc -c util.c
-
+	
 build: ls wc cd 
 	@echo "Build completed"
 

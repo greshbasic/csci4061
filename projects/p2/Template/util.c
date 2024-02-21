@@ -6,6 +6,7 @@
 #include <limits.h>
 #include <ctype.h>
 
+// how would you use this? (check header to see what i mean)
 char *commands[] = {"ls", "cd", "wc", "exit"};
 
 int parse_line(char *input, char *tokens[], char *delim) {

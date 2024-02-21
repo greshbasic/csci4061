@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 void cd(char* arg){
-	/*insert code here*/
+
 	if (chdir(arg)) {
 		perror("cd");
 		return;
