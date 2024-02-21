@@ -9,7 +9,7 @@
 
 #include "util.h"
 
-int main(){
+int main() {
 	/*write code here*/
 	bool cont = true;
 	char cwd[1000];
@@ -25,5 +25,6 @@ int main(){
 			cont = false;
 		}
 	}
+	
 	return 0;
 }

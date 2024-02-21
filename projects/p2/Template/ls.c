@@ -28,7 +28,7 @@ void ls_rec_help(char *path, bool recurse_flag) {
 		strcat(this_path, "/");
 		strcat(this_path, dir_entry->d_name);
 
-		int stat_status = stat(this_path, &s);
+		int stat_status = stat(this_path, &s); 
 		if (stat_status < 0) {
 			perror("ls");
 			return;
@@ -37,17 +37,17 @@ void ls_rec_help(char *path, bool recurse_flag) {
 		int is_not_current_dir = strcmp(dir_entry->d_name, ".");
 		int is_not_parent_dir = strcmp(dir_entry->d_name, "..");
 
-		if (is_not_current_dir && is_not_parent_dir) {
-			if (S_ISDIR(s.st_mode)) {
-				printf("%s\n", dir_entry->d_name);
-				if (recurse_flag) {
-					ls_rec_help(this_path, recurse_flag);	// recurse with this deeper path into a new dir
+		if (is_not_current_dir && is_not_parent_dir) {		// if it's not the current or parent directory...
+			if (S_ISDIR(s.st_mode)) {						// ...if it's a directory...
+				printf("%s\n", dir_entry->d_name);			// ...print its name
+				if (recurse_flag) {							// if the -R flag is set...
+					ls_rec_help(this_path, recurse_flag);	// ...recurse into the directory to get deeper files
 				}
-			} else {
-				printf("%s\n", dir_entry->d_name);
+			} else {										// if its a file...
+				printf("%s\n", dir_entry->d_name);			// ...print its name
 			}
 		}
-		dir_entry = readdir(dir);
+		dir_entry = readdir(dir); 							// get next entry
 	}
 	return;
 }
@@ -56,7 +56,7 @@ void ls(char *path, bool recurse_flag) {
 	/* Insert code here*/
 	if (path) {
 		ls_rec_help(path, recurse_flag);
-	} else {
+	} else {  
 		ls_rec_help(".", recurse_flag);
 	}
 	printf("\n");

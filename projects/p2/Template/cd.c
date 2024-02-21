@@ -10,10 +10,10 @@ void cd(char* arg){
 	}
 
 	char current_dir[100];
-	if (getcwd(current_dir, sizeof(current_dir))) {
+	if (getcwd(current_dir, sizeof(current_dir))) { 
 		printf("%s\n", current_dir);
 	} else {
-		perror("pwd");
+		perror("cd");
 		return;
 	}
 	
