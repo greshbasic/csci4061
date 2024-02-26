@@ -1,0 +1,14 @@
+Stats for dir0
+Symlink found: symlink.txt
+
+File found: hardlink.txt
+Mode: 100644 : -rw-r--r--
+User ID of Owner: 0
+Inode Number: 108290
+
+
+File found: d.txt
+Mode: 100644 : -rw-r--r--
+User ID of Owner: 0
+Inode Number: 108180
+

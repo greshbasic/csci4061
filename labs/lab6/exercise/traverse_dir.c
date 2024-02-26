@@ -26,7 +26,7 @@ void print_mode_h(mode_t mode) {
 
 void traverseDirectory(char *dirname){
     // TODO: change directory to dirname using chdir
-    if(??? != 0){
+    if(chdir(dirname) != 0){
         fprintf(stderr, "Cannot change directory to %s\n", dirname);
         exit(-1);
     }
@@ -56,7 +56,7 @@ void traverseDirectory(char *dirname){
         else { 
             struct stat stat_info;
             // TODO: run lstat(???) on the entry (dir_entry_name) to get stat_info
-            if(??? != 0){
+            if(lstat(dir_entry_name, &stat_info) != 0){
                 fprintf(stderr, "Cannot run stat on %s\n", dir_entry_name);
                 exit(-1);
             }
@@ -70,7 +70,7 @@ void traverseDirectory(char *dirname){
             
             // TODO: check for symbolic link
             // Hint: use dir_entry->d_type or S_ISLNK(???)
-            if(???){
+            if(S_ISLNK(stat_info.st_mode)){
                 fprintf(stdout, "Symlink found: %s\n", dir_entry_name); }
         }
     }
@@ -90,12 +90,12 @@ int main(int argc, char** argv) {
     char *symlink_f = "dir0/symlink.txt";
 
     // TODO: create hard link hardlink_f ("dir0/hardlink.txt") to temp_f ("linkfile.txt")
-    if(??? != 0){ 
+    if(link(temp_f, hardlink_f) != 0){ 
         fprintf(stderr, "Unable to create hard link %s\n", hardlink_f);
     }
 
     // TODO: create symbolic link symlink_f ("dir0/symlink.txt") to temp_f ("linkfile.txt")
-    if(??? != 0){ 
+    if(symlink(temp_f, symlink_f) != 0){ 
         fprintf(stderr, "Unable to create symbolic link %s\n", symlink_f);
     }
 
