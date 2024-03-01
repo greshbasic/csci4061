@@ -19,7 +19,7 @@
 #define WRITE (O_WRONLY | O_CREAT | O_TRUNC)
 #define APPEND (O_WRONLY | O_CREAT | O_APPEND)
 
-void handle_pipe(char *tokens_before_pipe[], char *tokens_after_pipe[], int j);
+void handle_pipe(char *tokens_before_pipe[], char *tokens_after_pipe[]);
 void handle_pipe_and_redirect(char *tokens[], int num_tokens, int fd, bool *had_pipe);
 
 int main() {
@@ -53,8 +53,7 @@ int main() {
 
 		// the command is not a command we made
 		if (get_command_type(tokens[0]) == ERROR) {
-			int fd;
-			int pipefd[2];
+			int fd = -1;
 			pid_t pid = fork();
 			bool had_pipe = false;
 
@@ -74,7 +73,7 @@ int main() {
 
 		// ls
 		if (command_number == 0) {
-			int fd;
+			int fd = -1;
 			pid_t pid = fork();
 			bool had_pipe = false;
 			if (pid < 0) {
@@ -109,7 +108,7 @@ int main() {
 		// wc
 		if (command_number == 2) {
 			pid_t pid = fork();
-			int fd;
+			int fd = -1;
 			bool had_pipe = false;
 			if (pid < 0) {
 				perror("fork");
@@ -136,7 +135,6 @@ int main() {
 }
 
 void handle_pipe_and_redirect(char *tokens[], int num_tokens, int fd, bool *had_pipe) {
-	int curr_fd;
 	
 	// check for redirection
 	for (int i = 0; i < num_tokens; i++) {
@@ -178,22 +176,21 @@ void handle_pipe_and_redirect(char *tokens[], int num_tokens, int fd, bool *had_
 				int num_tokens_before_pipe = i;
 				char *tokens_before_pipe[100];
 				int j = 0;
-				for (j; j < num_tokens_before_pipe; j++) {
-					tokens_before_pipe[j] = tokens[j]; 
+				for(j; j < num_tokens_before_pipe; j++) {
+					tokens_before_pipe[j] = tokens[j];
 				}
 
-				handle_pipe(tokens_before_pipe, tokens_after_pipe, j); // call the function to handle the pipe
+				handle_pipe(tokens_before_pipe, tokens_after_pipe); // call the function to handle the pipe
 				
 			}
 		}
 	}
 }
 
-void handle_pipe(char *tokens_before_pipe[], char *tokens_after_pipe[], int j) {
+void handle_pipe(char *tokens_before_pipe[], char *tokens_after_pipe[]) {
 	int original_stdout_fd = dup(STDOUT_FILENO);
 	int original_stdin_fd = dup(STDIN_FILENO);
 	int pipefd[2];
-	int fork_status;
 	int pipe_success = pipe(pipefd);
 
 	if (pipe_success < 0) {

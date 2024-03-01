@@ -1,17 +1,1 @@
-Currently in: /root/school/csci4061/projects/p2/Template
-Makefile
-cd
-cd.c
-ls
-ls.c
-output.txt
-shell
-shell.c
-test_dir
-util.c
-util.h
-util.o
-wc
-wc.c
-
      14      14      88
