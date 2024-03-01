@@ -1,5 +1,5 @@
 all: shell.c util.o build
-	gcc shell.c -o shell util.o
+	gcc shell.c -g -o shell util.o
 
 util.o: util.c util.h
 	gcc -c util.c

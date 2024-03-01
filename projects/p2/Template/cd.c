@@ -1,3 +1,9 @@
+/*test machine: csel-kh1262-18
+* date: 02/28/24
+* name: Gresham Basic, Elaine Nguyen
+* x500: basic009, nguy4546
+*/
+
 #include<stdlib.h>
 #include<stdio.h>
 #include <unistd.h>
@@ -9,6 +15,7 @@ void cd(char* arg){
 		return;
 	}
 
+	// Print the current directory after changing
 	char current_dir[100];
 	if (getcwd(current_dir, sizeof(current_dir))) { 
 		printf("Currently in: %s\n", current_dir);

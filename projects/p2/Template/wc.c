@@ -1,3 +1,9 @@
+/*test machine: csel-kh1262-18
+* date: 02/28/24
+* name: Gresham Basic, Elaine Nguyen
+* x500: basic009, nguy4546
+*/
+
 #include<stdlib.h>
 #include<stdio.h>
 #include <unistd.h>
@@ -15,8 +21,8 @@ int wc_l(char* path){
 		perror("wc");
 	}
 
-	read = getline(&line, &len, file);			// keep getline'ing lines until there are none left
-	while (read >= 0) {
+	read = getline(&line, &len, file);	// keep getline'ing lines until there are none left
+	while (read >= 0 && len > 0) {
 		line_count += 1;
 		read = getline(&line, &len, file);
 	}
@@ -39,7 +45,7 @@ int wc_w(char* path){
 	int word_count = 0;
 	FILE *file;
 	char curr_char;
-	char prev_char;
+	char prev_char = ' ';
 
 	file = fopen(path, "r");
 	if (!file) {
@@ -47,10 +53,10 @@ int wc_w(char* path){
 	}
 
 	curr_char = fgetc(file);
-	while (curr_char != EOF) {								//											     |		
-		if (curr_char == ' ' || curr_char == '\n') {	    // found a space or newline						 v	
-			if (prev_char != ' ' && prev_char != '\n') {    // is this a space AFTER a character? ("character ")
-				word_count += 1;							// if so, then we have seen +1 words
+	while (curr_char != EOF) {													//										   |	  |	    |
+		if (curr_char == ' ' || curr_char == '\n' || curr_char == '\0') {	    // found a space or newline				   v	  v     v 
+			if (prev_char != ' ' && prev_char != '\n') {    					// is this a AFTER a character? ("character python\nSQL\0")
+				word_count += 1;												// if so, then we have seen +1 words
 			}
 		}
 		prev_char = curr_char;
@@ -61,6 +67,7 @@ int wc_w(char* path){
 }
 
 int wc_c(char* path){
+	// count the number of characters in a file
 	int char_count = 0;
 	FILE *file;
 	char curr_char;
@@ -81,6 +88,7 @@ int wc_c(char* path){
 }
 
 void wc(int mode, char* path){
+	// Handles the different modes of wc
 	int line_count;
 	int word_count;
 	int char_count;
