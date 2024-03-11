@@ -20,7 +20,7 @@ int **cr3;
 
 static void initialize_tlb()
 {
-	//TODO: Initialize the TLB
+
 
 }
 //
@@ -42,26 +42,45 @@ void initialize_vmanager(int policy)
 	// You can add other initialization here as necessary
 }
 
-//
+//`
 // The implementation of the following functions is required
 //
-int translate_virtual_address(unsigned int v_addr)
-{
-	// [Hint 1]: Use the bitwise operators to extract the page number and offset
-	// [Hint 2]: Useful bitwise operators: >>, <<, &, |
-	//TODO 1: return -1 if the second-level page table is NULL
-	return -1;
+int translate_virtual_address(unsigned int v_addr) {
+
+	int first_level_index = (v_addr >> 22) & 0x3FF;
+	int second_level_index = (v_addr >> 12) & 0x3FF;
+	int offset = v_addr & 0xFFF;
+
+	if (cr3[second_level_index] == NULL) {
+		return -1;
+	}
+
+	int frame = cr3[first_level_index][second_level_index];
+
+	return (frame << 12) | offset;
+
 }
 
 void print_physical_address(int frame, int offset)
 {
 	//TODO : Print the physical address in the correct format
+	int physical_address = (frame << 12) | offset;
+	printf("0x%08x\n", physical_address);
 	return;
 }
 
 int get_tlb_entry(int n)
 {
 	//TODO 1: Get the frame from the TLB if it exists
+	if (n >= 0 && n < TLB_SIZE) {
+		if (tlb[n].valid) {
+			hit_count++;
+			return tlb[n].frame;
+		} else {
+			miss_count++;
+		}
+	}
+
 	//TODO 2: increment the hit and miss count accordingly
 	return -1;
 }
