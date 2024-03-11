@@ -12,14 +12,12 @@ int f1_orig(int ***);
 int f2_orig(int *);
 int **f3_orig(int **, int **);
 
-// TODO: This function has bad spatial locality. Make it more efficient!
-// Hint: What is the access pattern for the flattened 3D array in memory?
 int f1(int ***array_3d) {
 	int sum = 0;
 	for (int i = 0; i < DIM_3d; i++) {
 		for (int j = 0; j < DIM_3d; j++) {
 			for (int k = 0; k < DIM_3d; k++) {
-				sum += array_3d[k][j][i];
+				sum += array_3d[i][j][k];
 			}
 		}
 	}
@@ -29,12 +27,12 @@ int f1(int ***array_3d) {
 // TODO: This function has bad temporal locality. Make it more efficient!
 // Hint: Is there a better way to track a running sum?
 int f2(int *array) {
-	int sums[DIM_1d];
-	sums[0] = array[0];
+	int sum;
+	sum = array[0];
 	for (int i = 1; i < DIM_1d; i++) {
-		sums[i] = sums[i-1] + array[i];
+		sum += array[i];
 	}
-	return sums[DIM_1d-1];
+	return sum;
 }
 
 // TODO: This function has bad spatial AND temporal locality. Make it more efficient!
@@ -49,10 +47,12 @@ int **f3(int **array1, int **array2) {
 	}
 
 	// actual computation
+	int curr_in_arr2;
 	for (int j = 0; j < DIM_2d; j++) {
 		for (int k = 0; k < DIM_2d; k++) {
+			curr_in_arr2 = array2[k][j];	// reduce memory accesses of array2
 			for (int i = 0; i < DIM_2d; i++) {
-				result[i][j] += array1[i][k] * array2[k][j];
+				result[i][j] += array1[i][k] * curr_in_arr2;
 			}
 		}
 	}
