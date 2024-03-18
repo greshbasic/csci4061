@@ -15,16 +15,16 @@ int translate(int virtual_addr, int ***page_table) {
 	// start from most significant to least significant (left to right), order starts from 1st.
 
 	// 10 most significant bit 
-	// int index_1 =
+	int index_1 = virtual_addr >> 20;
 
 	// 11th to 16th most significant bits (inclusive)
-	// int index_2 =
+	int index_2 = virtual_addr >> 14 & 0x3F;
 
 	// 17th to 22th most significant bits (inclusive)
-	// int index_3 = 
+	int index_3 = virtual_addr >> 8 & 0x3F;
 
 	// 8 least significant bits
-	// int offset =
+	int offset = virtual_addr & 0xFF;
 
 	physical_addr = (page_table[index_1][index_2][index_3] << 8) + offset;
 
