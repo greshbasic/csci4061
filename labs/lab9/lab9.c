@@ -26,7 +26,12 @@ typedef struct argstruct {
 //	store the sums at the appropriate indices of res_mat
 void * partial_matrix_add(void * args) {
 
-    // Your code goes here
+    args_t *arg = (args_t *) args;
+    for (int x = arg->x_start; x < arg->x_end; x++) {
+        for (int y = arg->y_start; y < arg->y_end; y++) {
+            arg->res_mat[x][y] = mat1[x][y] + mat2[x][y];
+        }
+    }
 
     return NULL;
 }
@@ -40,15 +45,15 @@ int main() {
     clock_t t_multi_start, t_multi_end, t_single_start, t_single_end;
     int ** res_mat_multi = malloc(MATSIZE * sizeof(int*));
     int ** res_mat_single = malloc(MATSIZE * sizeof(int*));
-    for(i = 0; i < MATSIZE; i++) {
+    for (i = 0; i < MATSIZE; i++) {
         res_mat_multi[i] = malloc(MATSIZE * sizeof(int));
         res_mat_single[i] = malloc(MATSIZE * sizeof(int));
     }
 
     // Populate base matrices with random integers
     // Initialize result matrices with -1
-    for(j = 0; j < MATSIZE; j++) {
-        for(k = 0; k < MATSIZE; k++) {
+    for (j = 0; j < MATSIZE; j++) {
+        for (k = 0; k < MATSIZE; k++) {
             mat1[j][k] = rand() % 1000 + 1;
             mat2[j][k] = rand() % 1000 + 1;
             res_mat_multi[j][k] = -1;
@@ -58,13 +63,25 @@ int main() {
 
     // Measure time for multiple thread addition
     t_multi_start = clock();
+
     //TODO: Create threads to populate res_mat_multi with the result
     //      of performing matrix addition mat1 + mat2
     //      Each thread should operate on one quadrant of mat1 and mat2
     //      Remember to set the fields in each argument struct m_args[i]
-    for(i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++) {
+		m_args[i].x_start = (i / 2) * (MATSIZE / 2);
+		m_args[i].x_end = (i / 2 + 1) * (MATSIZE / 2);
+		m_args[i].y_start = (i % 2) * (MATSIZE / 2);
+		m_args[i].y_end = (i % 2 + 1) * (MATSIZE / 2);
+		m_args[i].res_mat = res_mat_multi;
+		
+		pthread_create(&m_threads[i], NULL, partial_matrix_add, &m_args[i]);
+	}
 
-    }
+
+	for (i = 0; i < 4; i++) {
+		pthread_join(m_threads[i], NULL);
+	}
     //TODO: Remember to join with each thread created
 
     // This should go immediately after the end of the code for multiple threads
@@ -77,7 +94,14 @@ int main() {
     //      of performing matrix addition mat1 + mat2
     //      This thread should operate on the ENTIRETY of the matrices
     //      Remember to set the fields in the argument struct s_args
+	s_args.x_start = 0;
+	s_args.x_end = MATSIZE;
+	s_args.y_start = 0;
+	s_args.y_end = MATSIZE;
+	s_args.res_mat = res_mat_single;
 
+	pthread_create(&s_thread, NULL, partial_matrix_add, &s_args);
+	pthread_join(s_thread, NULL);
 
     //TODO: Remember to join with the one thread created
 
