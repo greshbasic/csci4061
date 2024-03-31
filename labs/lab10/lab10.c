@@ -44,8 +44,12 @@ int extract(struct buffer* q) {
 	return val;
 }
 
-// TODO: Insert code to use a condition variable.
-// hint: what should be done when an item is added so that it may later be removed?
+
+// [sophon-1@Trisolaris] ~/dimensions/1/4061/csci4061/labs/lab10 Φ ./lab10 
+// Cond Test: 
+// Total of buffer = 1275
+// Time (in us) to run = 2930
+
 void *condProducer(void* arg) {
 
 	// Random delay. DO NOT REMOVE!
@@ -57,14 +61,18 @@ void *condProducer(void* arg) {
 	static int in = 0;
 	++in;
 
+	pthread_mutex_lock(cq->mutex); 				 // lock mutex.
+
 	// Add an element to the buffer.
 	insert(cq->q, in);
+
+	pthread_cond_signal(cq->cond); 				 // signal that elem has been added
+
+	pthread_mutex_unlock(cq->mutex); 			 // unlock mutex.
 	
 	return NULL;
 }
 
-// TODO: Insert code to use a condition variable.
-// hint: what condition must hold before an item can be removed from the queue?
 void *condConsumer(void* arg) {
 
 	// Random delay. DO NOT REMOVE!
@@ -72,8 +80,16 @@ void *condConsumer(void* arg) {
 
 	struct condBuffer* cq = (struct condBuffer*) arg;
 
+	pthread_mutex_lock(cq->mutex); 				 // lock mutex.
+
+	while (!(cq->q->index)) {					 // If buffer is empty ...
+		pthread_cond_wait(cq->cond, cq->mutex);	 // ... wait for signal that elem has been added
+	} 
+
 	// Remove an element from the buffer.
 	condTotal += extract(cq->q);
+
+	pthread_mutex_unlock(cq->mutex); 			 // unlock mutex.
 
 	return NULL;
 }
