@@ -16,7 +16,7 @@ char line[1000];
 
 // not really sure what this is meant to do, just read? do something based on line number? like why does it have line_no as an argument?
 // i assume the idea is to read a specific line, but the comment of "read the file on a line by line basis" is misleading
-char* read_line(char* fname, int line_no)  {
+char* read_line(char* fname, int line_no) {
 	int current_line = 0;
 	FILE *fp = fopen(fname, "r");
 	char* result = fgets(line, sizeof(line), fp);
