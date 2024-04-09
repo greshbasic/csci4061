@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "README": "ignore",
+        "linked_list.h": "c"
+    }
+}
